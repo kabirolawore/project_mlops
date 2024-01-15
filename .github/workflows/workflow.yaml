@@ -1,0 +1,53 @@
+name: CI/CD Workflow
+on:
+  push:
+    branches:
+      - main
+      - staging
+
+jobs:
+  run_tests:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install setuptools
+          pip install -r requirements.txt
+      - name: Run Unit Test
+        run: |
+          python -m unittest discover -s production -p "test_*.py"
+
+  deploy_and_retrain:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/staging'
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install setuptools
+          pip install -r requirements.txt
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: Install Azure CLI
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y azure-cli
+      - name: Install Azure ML Extension
+        run: |
+          az extension add -n ml -y
+      - name: Submit Azure ML Job
+        run: |
+          ls production/
+          az ml job create --file production/job.yaml --resource-group cw_resourcegrp --workspace-name cw_workspace

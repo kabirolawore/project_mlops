@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/Users/Admin/OneDrive/Desktop/774%20CW2/production/mlruns/0/1cb6df54f83d42a38dab7b2915f4ecae/artifacts
+end_time: 1704058307414
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+name: ''
+run_id: 1cb6df54f83d42a38dab7b2915f4ecae
+run_uuid: 1cb6df54f83d42a38dab7b2915f4ecae
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1704058280659
+status: 3
+tags: []
+user_id: Admin
